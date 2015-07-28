@@ -1,9 +1,6 @@
 set(TARGET_NAME interface)
 project(${TARGET_NAME})
 
-# set a default root dir for each of our optional externals if it was not passed
-find_package(Qt5LinguistTools REQUIRED)
-find_package(Qt5LinguistToolsMacros)
 
 set(BUILD_SEQ "dev")
 
@@ -29,19 +26,7 @@ if (APPLE)
 
   set(MACOSX_BUNDLE_BUNDLE_NAME Interface)
   set(MACOSX_BUNDLE_GUI_IDENTIFIER io.highfidelity.Interface)
-  
-  if (UPPER_CMAKE_BUILD_TYPE MATCHES RELEASE OR UPPER_CMAKE_BUILD_TYPE MATCHES RELWITHDEBINFO)
-    set(ICON_FILENAME "interface.icns")
-  else ()
-    set(ICON_FILENAME "interface-beta.icns")
-  endif ()
-  
-  # set how the icon shows up in the Info.plist file
-  SET(MACOSX_BUNDLE_ICON_FILE "${ICON_FILENAME}")
 
-  # set where in the bundle to put the resources file
-  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/icon/${ICON_FILENAME} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  
   set(DISCOVERED_RESOURCES "")
 
   # use the add_resources_to_os_x_bundle macro to recurse into resources
@@ -49,8 +34,6 @@ if (APPLE)
 
   # append the discovered resources to our list of interface sources
   list(APPEND INTERFACE_SRCS ${DISCOVERED_RESOURCES})
-  
-  set(INTERFACE_SRCS ${INTERFACE_SRCS} "${CMAKE_CURRENT_SOURCE_DIR}/icon/${ICON_FILENAME}")
 endif()
 
 # create the executable, make it a bundle on OS X

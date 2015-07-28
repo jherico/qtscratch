@@ -8,7 +8,11 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
+#include <QtGlobal>
+
+#ifdef Q_OS_WIN32
 #include <Windows.h>
+#endif
 
 #include <QCommandLineParser>
 #include <QDebug>

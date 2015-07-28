@@ -22,7 +22,7 @@ using namespace std;
 
 Application::Application(int& argc, char** argv, QElapsedTimer &startup_time) :
     QApplication(argc, argv) { 
-    _window = new QMainWindow(desktop());
+    _window = new QMainWindow();
     _menu = new QMenuBar();
     QActionGroup* screensGroup = new QActionGroup(this);
     auto menu = _menu->addMenu("Screen");
@@ -67,11 +67,22 @@ void Application::setFullscreen(const QScreen* target) {
         originalScreen = _window->windowHandle()->screen();
         qDebug() << savedGeometry;
     }
+#ifdef Q_OS_MAC
+    _window->setGeometry(target->availableGeometry());
+#endif
     _window->windowHandle()->setScreen((QScreen*)target);
     _window->showFullScreen();
 }
 
 void Application::unsetFullscreen() {
     _window->showNormal();
+#ifdef Q_OS_MAC
+    QTimer* timer = new QTimer();
+    timer->singleShot(1000, [=]{
+        _window->setGeometry(savedGeometry);
+        timer->deleteLater();
+    });
+#else
     _window->setGeometry(savedGeometry);
+#endif
 }
